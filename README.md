@@ -2,7 +2,7 @@
 
 This app uses Cosine Similarity method to find the similarity between two embeddings. 
 
-**Steps involve to find the similarity between two documents:**
+**Steps involved finding the similarity between two documents:**
 1. Normalization: Transforming the text into lower cases and removes all the punctuations and special characters in the text. 
 2. Tokenization: Splitting the text into a list of tokens. 
 3. Removing Stopwords: Removing all the stopwords that do not add much meaning to the text.
