@@ -10,3 +10,5 @@ This app uses Cosine Similarity method to find the similarity between two embedd
 5. Create a set of keywords between document A and document B.
 6. Transform the a list of word in document A and document B into embedding vectors, respectively. 
 7. Compute the cosine similarity to find the similarity between the embeddings (i.e., vector A and vector B). 
+
+You may click on this link to view the app: https://share.streamlit.io/jeffwongqy/document-similarity/main/app.py
