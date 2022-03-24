@@ -6,6 +6,8 @@ import re
 import docx2txt
 import numpy as np
 
+import nltk
+nltk.download('punkt')
 
 ####################################################################
 #####################  FUNCTION DEFINITION  ########################
