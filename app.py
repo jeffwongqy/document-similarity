@@ -235,7 +235,7 @@ def main():
             # call the function to compute the cosine similarity between document A and document B
             cosine_similarity = computeCosineSimilarity(docA_vector, docB_vector, keywords)
             
-            st.info("Similarity between Document A and Document B: {:.4f} ({:.4f}%)".format(cosine_similarity, cosine_similarity*100))
+            st.info("Similarity between Document A and Document B: {:.4f} ({:.2f}%)".format(cosine_similarity, cosine_similarity*100))
             
             # step 6: conclusion 
             st.header("Step 6: Conclusion")
