@@ -93,8 +93,13 @@ def main():
     
     st.title("Document Similarity")
     st.write("""
-                 This app uses the **Cosine Similarity** method to find the similarity between the two text documents.
+                 This app uses the **cosine similarity** method to find the similarity between the two text files or documents.
                  """)
+    st.image("doc_image.jpg")
+    
+    st.info("""**NOTE:** Please upload both documents A and B in the form of word documents or text files and then click on the **Check Document Similarity** button 
+            to perform a document similarity check between two text files or documents.""")
+    
     # prompt the user to upload document A
     st.subheader("Upload Document Files:")
     docA_file = st.file_uploader("Upload Document A:", type = ['docx', 'txt'], accept_multiple_files = False)
@@ -103,7 +108,7 @@ def main():
     docB_file = st.file_uploader("Upload Document B:", type = ['docx', 'txt'], accept_multiple_files = False)
     
     # prompt the user to click on the button to process the computation 
-    clickProcess = st.button("Process")
+    clickProcess = st.button("Check Document Similarity")
     
     if clickProcess:
         if docA_file is not None and docB_file is not None:
@@ -240,17 +245,17 @@ def main():
             # step 6: conclusion 
             st.header("Step 6: Conclusion")
             if cosine_similarity >= 0.8 and cosine_similarity <= 1.00:
-                st.success("Both Document A and Document B are highly the same. ")
+                st.success("Both Document A and Document B are highly similar. ")
             elif cosine_similarity >= 0.5 and cosine_similarity < 0.79:
-                st.success("Both Document A and Document B are moderately the same. ")
+                st.success("Both Document A and Document B are moderately similar. ")
             elif cosine_similarity >= 0.3 and cosine_similarity < 0.49:
-                st.success("Both Document A and Document B are moderately not the same. ")
+                st.success("Both Document A and Document B are moderately not similar. ")
             else:
-                st.success("Both Document A and Document are highly not the same. ")
+                st.success("Both Document A and Document are highly not similar. ")
             
             
         elif docA_file is None and docB_file is None:
-            st.error("Please upload Document A and Document B in this form of docx. or txt.")
+            st.error("Please upload Document A and Document B in the form of docx. or txt.")
         elif docA_file is None:
             st.error("Please upload Document A in the form of docx. or txt. ")
         else:
