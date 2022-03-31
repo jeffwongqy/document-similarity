@@ -5,6 +5,8 @@ from nltk.stem import WordNetLemmatizer
 import re
 import docx2txt
 import numpy as np
+import time
+import pandas as pd
 
 import nltk
 nltk.download('punkt')
@@ -97,11 +99,11 @@ def main():
                  """)
     st.image("doc_image.jpg")
     
-    st.info("""**NOTE:** Please upload both documents A and B in the form of word documents or text files and then click on the **Check Document Similarity** button 
+    st.warning("""**NOTE:** Please upload both documents A and B in the form of word documents or text files and then click on the **Check Document Similarity** button 
             to perform a document similarity check between two text files or documents.""")
     
     # prompt the user to upload document A
-    st.subheader("Upload Document Files:")
+    st.header("Upload Document Files:")
     docA_file = st.file_uploader("Upload Document A:", type = ['docx', 'txt'], accept_multiple_files = False)
     
     # prompt the user to upload document B
@@ -113,147 +115,115 @@ def main():
     if clickProcess:
         if docA_file is not None and docB_file is not None:
             
-            # step 1: Read the uploaded documents 
-            st.header("Step 1: Read the uploaded documents. ")
+            st.header("Raw Text:")
             
             # read document A
             if docA_file.type == "text/plain":
                 docA_raw_text = str(docA_file.read(), "utf-8")
-                st.subheader("Raw Text of Document A:")
-                st.write(docA_raw_text)
+                st.markdown("##### Document A:")
+                st.info(docA_raw_text)
             else:
                 docA_raw_text = docx2txt.process(docA_file)
-                st.subheader("Raw Text of Document A:")
-                st.write(docA_raw_text)
+                st.markdown("##### Document A:")
+                st.info(docA_raw_text)
             
             
             # read document B
             if docB_file.type == "text/plain":
                 docB_raw_text = str(docB_file.read(), "utf-8")
-                st.subheader("Raw Text of Document B:")
-                st.write(docB_raw_text)
+                st.markdown("##### Document B:")
+                st.info(docB_raw_text)
             else:
                 docB_raw_text = docx2txt.process(docB_file)
-                st.subheader("Raw Text of Document B: ")
-                st.write(docB_raw_text)
+                st.markdown("##### Document B: ")
+                st.info(docB_raw_text)
             
             
+            with st.spinner("Text Cleaning In Progress..."):
+                time.sleep(5)
+           
             
-            # step 2: Text Cleaning
-            st.header("Step 2: Text Cleaning")
-            
-            # step 2.1: convert the text to lower cases.
-            st.subheader("Step 2.1: Transforming the text into lower cases. ")
-            
-            # Call the function to convert text document A into its lower case
+            # Call the function to convert text document A and document B into its lower case
             docA_lower_case_text = text_to_lowerCase(docA_raw_text)
-            st.subheader("Document A: ")
-            st.write(docA_lower_case_text)
-            
-            # Call the function to convert text document B into its lower case
             docB_lower_case_text = text_to_lowerCase(docB_raw_text)
-            st.subheader("Document B:")
-            st.write(docB_lower_case_text)
             
             
-            # step 2.2: remove the punctuation from the text
-            st.subheader("Step 2.2: Remove all the special characters and punctuations from text. ")
-            
-            # call the function to remove all the special characters and punctuations from document A
+            # call the function to remove all the special characters and punctuations from document A and document B
             docA_no_punct_text = removes_punctuation(docA_lower_case_text)
-            st.subheader("Document A: ")
-            st.write(docA_no_punct_text)    
-            
-            # call the function to remove all the special characters and punctuations from document B
             docB_no_punct_text = removes_punctuation(docB_lower_case_text)
-            st.subheader("Document B: ")
-            st.write(docB_no_punct_text)  
             
             
-            # step 2.3: tokenization 
-            st.subheader("Step 2.3: Splitting the text into a list of tokens (also known as Tokenization). ")
-            
-            # call the function to split the text in document A into a list of tokens
+            # call the function to split the text in document A and document B into a list of tokens
             docA_token = word_tokenization(docA_no_punct_text)
-            st.subheader("List of tokens for Document A: ")
-            st.dataframe(sorted(docA_token))
-            
-            # call the function to split the text in document B into a list of tokens
             docB_token = word_tokenization(docB_no_punct_text)
-            st.subheader("List of tokens for Document B: ")
-            st.dataframe(sorted(docB_token))
             
             
-            # step 2.4: removing stopwords
-            st.subheader("Step 2.4: Removing stopwords that are most commonly used in the language and do not add too much meaning to the text.")
             
-            # call the function to remove stopwords from text in document A
+            # call the function to remove stopwords from text in document A and document B
             docA_no_stopwords = remove_stopwords(docA_token)
-            st.subheader("List of tokens with stopwords removed for Document A: ")
-            st.dataframe(sorted(docA_no_stopwords))
-            
-            # call the function to remove stopwords from text in document B
             docB_no_stopwords = remove_stopwords(docB_token)
-            st.subheader("List of tokens with stopwords removed for Document B: ")
-            st.dataframe(sorted(docB_no_stopwords) )
             
             
-            # step 2.5: lemmatization 
-            st.subheader("Step 2.5: Getting the same words for a group of inflected word forms (also known as Lemmatization). ")
-            
-            # call the function to lemmatize the text in document A
+            # call the function to lemmatize the text in document A and document B
             docA_text_lemmatize = word_lemmatize(docA_no_stopwords)
-            st.subheader("List of lemmatize words for Document A: ")
-            st.text(docA_text_lemmatize)
-            
-            # call the function to lemmatize the text in document B
             docB_text_lemmatize = word_lemmatize(docB_no_stopwords)
-            st.subheader("List of lemmatize words for Document B: ")
-            st.text(docB_text_lemmatize)  
+            
             
             # copy the cleaned text into new variables
             docA_cleaned_text = docA_text_lemmatize
             docB_cleaned_text = docB_text_lemmatize
             
             
-            # step 3: Create a list of keywords between document A and document B
-            st.header("Step 3: Form a set of keywords between Document A and Document B")
+            # Create a list of keywords between document A and document B
+            st.header("Formation of keywords between Document A and Document B")
+            with st.spinner("Now create a set of keywords between document A and document B."):
+                time.sleep(5)
             keywords = set(docA_cleaned_text).union(set(docB_text_lemmatize))
-            st.dataframe(sorted(keywords))
+            st.text(sorted(keywords))
+            st.write("**NOTE:** Keywords are sorted in alphabetical order. ")
             
-            # step 4: create embedding vector for document A and document B
-            st.header("Step 4: Create an embedding vector for Document A and Document B")
             
-            # call the function to create embedding vector for document A
-            st.subheader("Embedding Vector for Document A:")
+            # create embedding vector for document A and document B
+            st.header("Embedding Vectors for Document A and Document B")
+            
+            # set timer
+            with st.spinner("Computing embedding vectors for document A and document B."):
+                time.sleep(5)
+            # call the function to create embedding vector for document A and document B
+            st.markdown("##### Embedding Vector for Document A:")
             docA_vector = embeddingVector(docA_cleaned_text, keywords)
             st.text(docA_vector)
             
-            # call the function to create embedding vector for document B
-            st.subheader("Embedding Vector for Document B:")
+            st.markdown("##### Embedding Vector for Document B:")
             docB_vector = embeddingVector(docB_cleaned_text, keywords)
             st.text(docB_vector)
             
+            st.write("**NOTE:** Embedding vectors were based on the keywords formation between document A and document B.")
             
-            # step 5: find the similarity between two documents
-            st.header("Step 5: Find the similarity between Document A and Document B: ")
+            # compute similarity scores between document A and document B
+            st.header("How similarity between Document A and Document B? ")
+            
+            # set timer
+            with st.spinner("Computing similarity scores between document A and document B."):
+                time.sleep(5)
+            
             # call the function to compute the cosine similarity between document A and document B
             cosine_similarity = computeCosineSimilarity(docA_vector, docB_vector, keywords)
+            st.info("The similarity score between Document A and Document B is  {:.4f} or {:.2f}%".format(cosine_similarity, cosine_similarity*100))
+            st.write("**NOTE:** The similarity score was computed based on embedding vectors in document A and document B.")
             
-            st.info("Similarity between Document A and Document B: {:.4f} ({:.2f}%)".format(cosine_similarity, cosine_similarity*100))
-            
-            # step 6: conclusion 
-            st.header("Step 6: Conclusion")
+            # conclusion 
+            st.header("Conclusion")
             if cosine_similarity >= 0.8 and cosine_similarity <= 1.00:
-                st.success("Both Document A and Document B are highly similar. ")
+                st.success("The similarity scores show that both document A and document B are highly similar. ")
             elif cosine_similarity >= 0.5 and cosine_similarity < 0.79:
-                st.success("Both Document A and Document B are moderately similar. ")
+                st.success("The similarity scores show that both document A and document B are moderately similar. ")
             elif cosine_similarity >= 0.3 and cosine_similarity < 0.49:
-                st.success("Both Document A and Document B are moderately not similar. ")
+                st.success("The similarity scores show that both document A and document B are moderately not similar. ")
             else:
-                st.success("Both Document A and Document are highly not similar. ")
-            
-            
+                st.success("The similarity scores show that both document A and document B are highly not similar. ")
+            st.write("**NOTE:** The conclusion was based on the resultant similarity score. ")
+        
         elif docA_file is None and docB_file is None:
             st.error("Please upload Document A and Document B in the form of docx. or txt.")
         elif docA_file is None:
