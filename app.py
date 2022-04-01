@@ -23,9 +23,14 @@ def text_to_lowerCase(text):
     text_lowerCase = text.lower() # convert the text to lower case
     return text_lowerCase
 
-# create a function to remove all the punctuations from the text
+# create a function to remove digits in the text
+def remove_digits(text):
+    text_noDigits = re.sub(r'[\d]', '', text)
+    return text_noDigits
+
+# create a function to remove all the punctuations in the text
 def removes_punctuation(text):
-    text_no_punct = re.sub(r'[^\w\s]', '', text) # using regexp to remove all the special characters and punctuations from the text 
+    text_no_punct = re.sub(r'[^\w\s]', '', text) # using regexp to remove all the special characters and punctuations in the text 
     return text_no_punct
 
 # create a function for tokenization process
@@ -143,21 +148,22 @@ def main():
                 time.sleep(5)
            
             
-            # Call the function to convert text document A and document B into its lower case
+            # call the function to convert text document A and document B into its lower case
             docA_lower_case_text = text_to_lowerCase(docA_raw_text)
             docB_lower_case_text = text_to_lowerCase(docB_raw_text)
             
+            # call the function to remove all digits for document A and document B
+            docA_no_digits = remove_digits(docA_lower_case_text)
+            docB_no_digits = remove_digits(docB_lower_case_text)
             
-            # call the function to remove all the special characters and punctuations from document A and document B
-            docA_no_punct_text = removes_punctuation(docA_lower_case_text)
-            docB_no_punct_text = removes_punctuation(docB_lower_case_text)
+            # call the function to remove all the special characters and punctuations for document A and document B
+            docA_no_punct_text = removes_punctuation(docA_no_digits)
+            docB_no_punct_text = removes_punctuation(docB_no_digits)
             
             
             # call the function to split the text in document A and document B into a list of tokens
             docA_token = word_tokenization(docA_no_punct_text)
             docB_token = word_tokenization(docB_no_punct_text)
-            
-            
             
             # call the function to remove stopwords from text in document A and document B
             docA_no_stopwords = remove_stopwords(docA_token)
